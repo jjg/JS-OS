@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<title>JS/OS File Uploader</title>
+	</head>
+	<body>
+		<h1>JS/OS File Uploader</h1>
+		<label for="path">Path</label>
+		<input id="path" value="http://jsfs.jasongullickson.com/data/" />
+		<label for="accessKey">access key</label>
+		<input id="accessKey" />
+		
+		<form method="post" enctype="multipart/form-data">
+		  <label for="file">File</label>
+		  <input id="file" name="file" type="file" />
+		  <button>Upload</button>
+		</form>
+
+		<script>
+			const form = document.querySelector('form');
+			const path = document.querySelector("input#path");
+			const accessKey = document.querySelector("input#accessKey");
+			const file = document.querySelector("input#file");
+			form.addEventListener('submit', handleSubmit);
+
+			/** @param {Event} event */
+			function handleSubmit(event) {
+			  const url = new URL(path.value + file.files[0].name);
+
+			  // DEBUG
+			  console.log("url: " + url);
+			  
+			  const formData = new FormData(form);
+				const headers = new Headers();
+				headers.append("x-access-key", accessKey.value);
+
+			  /** @type {Parameters<fetch>[1]} */
+			  const fetchOptions = {
+			  	headers: headers,
+			    method: form.method,
+			    body: formData,
+			  };
+
+			  fetch(url, fetchOptions);
+
+			  event.preventDefault();
+			}		
+		</script>
+	</body>
+</html>
