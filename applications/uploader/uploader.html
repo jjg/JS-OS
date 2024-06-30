@@ -4,23 +4,26 @@
 	</head>
 	<body>
 		<h1>JS/OS File Uploader</h1>
-		<label for="path">Path</label>
+		<label for="path">Path (incl. trailing slash!)</label>
 		<input id="path" value="http://jsfs.jasongullickson.com/data/" />
+		<br>
 		<label for="accessKey">access key</label>
 		<input id="accessKey" />
-		
-		<form method="post" enctype="multipart/form-data">
+		<br>
+
 		  <label for="file">File</label>
 		  <input id="file" name="file" type="file" />
-		  <button>Upload</button>
-		</form>
+		  <br>
+		  <button id="upload">Upload</button>
+
 
 		<script>
-			const form = document.querySelector('form');
+			//const form = document.querySelector('form');
 			const path = document.querySelector("input#path");
 			const accessKey = document.querySelector("input#accessKey");
 			const file = document.querySelector("input#file");
-			form.addEventListener('submit', handleSubmit);
+			uploadButton = document.getElementById("upload");
+			uploadButton.addEventListener("click", handleSubmit);
 
 			/** @param {Event} event */
 			function handleSubmit(event) {
@@ -29,15 +32,17 @@
 			  // DEBUG
 			  console.log("url: " + url);
 			  
-			  const formData = new FormData(form);
+			  //const formData = new FormData(form);
 				const headers = new Headers();
+				headers.set("content-type", file.files[0].type);
 				headers.append("x-access-key", accessKey.value);
+				
 
 			  /** @type {Parameters<fetch>[1]} */
 			  const fetchOptions = {
 			  	headers: headers,
-			    method: form.method,
-			    body: formData,
+			    method: "post",
+			    body: file.files[0],
 			  };
 
 			  fetch(url, fetchOptions);
